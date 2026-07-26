@@ -6,7 +6,7 @@
 
 **Edit in browser → AI agent updates source code**
 
-[![npm version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/rishavbuilder/Visual-Agent)
+[![npm version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/rishavbuilder/Visual-Agent)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
 [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)]()
@@ -68,6 +68,84 @@
       │──────────────────────────>│                           │
       │                           │                           │
 ```
+
+---
+
+## ⚡ Streaming Support (v3.1.0)
+
+Visual Agent supports **streaming HTML** for modern frameworks like Next.js App Router.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Streaming Proxy Flow                         │
+└─────────────────────────────────────────────────────────────────┘
+
+  Next.js Server                Visual Agent              Browser
+      │                              │                        │
+      │  Chunk 1: <!DOCTYPE html>   │                        │
+      ├─────────────────────────────>│                        │
+      │                              │  Forward immediately   │
+      │                              ├───────────────────────>│
+      │                              │                        │
+      │  Chunk 2: <head>...</head>  │                        │
+      ├─────────────────────────────>│                        │
+      │                              │  Forward immediately   │
+      │                              ├───────────────────────>│
+      │                              │                        │
+      │  Chunk 3: <body>...</body>  │                        │
+      ├─────────────────────────────>│                        │
+      │                              │  Inject overlay        │
+      │                              │  Forward with script   │
+      │                              ├───────────────────────>│
+      │                              │                        │
+      │                              │    ✅ Works!           │
+```
+
+**Benefits:**
+- ✅ Next.js App Router streaming works
+- ✅ React Server Components work
+- ✅ Suspense boundaries work
+- ✅ Loading screens animate properly
+- ✅ React hydration not blocked
+
+---
+
+## 🔧 Troubleshooting
+
+### Next.js Loading Screen Not Working?
+
+If your Next.js app's loading screen freezes or React hydration fails:
+
+**Problem:** Proxy was buffering entire HTML, breaking streaming.
+
+**Solution:** Updated in v3.1.0 - streaming proxy now forwards chunks immediately.
+
+```bash
+# Update to latest version
+cd Visual-Agent && git pull && npm install
+
+# Restart Visual Agent
+visual-agent start --target 3000
+```
+
+### "Content Encoding Error" in Browser?
+
+**Cause:** Proxy couldn't decompress gzip/brotli response.
+
+**Solution:** v3.1.0 handles decompression on last chunk only.
+
+```bash
+# Check if your server uses compression
+curl -I http://localhost:3000 | grep -i encoding
+```
+
+### React Hydration Mismatch?
+
+**Cause:** Overlay script was blocking React events.
+
+**Solution:** v3.1.0 removed `preventDefault()` and `stopPropagation()` from click handler.
+
+---
 
 ---
 
@@ -387,7 +465,7 @@ If you find this project useful, please:
 
 ## 📊 Tags
 
-`visual-editor` `ai-agent` `code-generation` `web-development` `frontend` `css` `editing` `mcp` `claude` `cursor` `opencode` `developer-tools` `productivity`
+`visual-editor` `ai-agent` `code-generation` `web-development` `frontend` `css` `editing` `claude` `cursor` `opencode` `developer-tools` `productivity` `nextjs` `streaming`
 
 ---
 
