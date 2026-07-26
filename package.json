@@ -1,0 +1,49 @@
+{
+  "name": "visual-agent",
+  "version": "3.0.0",
+  "description": "Local-first visual editing system for AI coding agents",
+  "main": "src/server/index.js",
+  "bin": {
+    "visual-agent": "./bin/visual-agent.js"
+  },
+  "scripts": {
+    "start": "node bin/visual-agent.js start",
+    "dev": "node bin/visual-agent.js start",
+    "test": "node bin/visual-agent.js --help"
+  },
+  "keywords": [
+    "visual-editor",
+    "ai-agent",
+    "code-generation",
+    "web-development",
+    "frontend",
+    "css",
+    "editing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "chokidar": "^3.5.3",
+    "commander": "^11.1.0",
+    "express": "^4.18.2",
+    "portfinder": "^1.0.32",
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/visual-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/visual-agent/issues"
+  },
+  "homepage": "https://github.com/username/visual-agent#readme"
+}

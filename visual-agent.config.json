@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "server": {
+    "port": 3001
+  },
+  "proxy": {
+    "autoDetect": true,
+    "targetPort": null
+  },
+  "overlay": {
+    "enabled": true,
+    "position": "bottom-right"
+  },
+  "storage": {
+    "pendingDir": ".visual-agent/pending",
+    "appliedDir": ".visual-agent/applied"
+  }
+}
