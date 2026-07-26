@@ -35,27 +35,18 @@ function checkPort(port) {
   });
 }
 
-function decompressBody(chunks, encoding) {
-  const buffer = Buffer.concat(chunks);
-
-  if (!encoding) return buffer;
-
+function decompressBuffer(chunk, encoding) {
+  if (!encoding || encoding === 'identity') return chunk;
   try {
     switch (encoding) {
-      case 'gzip':
-        return zlib.gunzipSync(buffer);
-      case 'br':
-        return zlib.brotliDecompressSync(buffer);
-      case 'deflate':
-        return zlib.inflateSync(buffer);
-      case 'identity':
-        return buffer;
-      default:
-        return buffer;
+      case 'gzip': return zlib.gunzipSync(chunk);
+      case 'br': return zlib.brotliDecompressSync(chunk);
+      case 'deflate': return zlib.inflateSync(chunk);
+      default: return chunk;
     }
   } catch (e) {
     console.error(chalk.yellow(`  Decompress error (${encoding}): ${e.message}`));
-    return buffer;
+    return chunk;
   }
 }
 
@@ -74,33 +65,51 @@ function proxyRequest(req, res, targetPort, onFileServed) {
     const contentType = proxyRes.headers['content-type'] || '';
 
     if (contentType.includes('text/html')) {
-      let body = [];
-      proxyRes.on('data', (chunk) => body.push(chunk));
-      proxyRes.on('end', () => {
-        if (headersSent) return;
-        headersSent = true;
+      // STREAMING: Forward chunks immediately, inject overlay only on last chunk
+      let lastChunk = null;
+      const agentPort = parseInt(process.env.VA_PORT || '3001');
 
-        const encoding = proxyRes.headers['content-encoding'];
-        const decompressed = decompressBody(body, encoding);
-        let html = decompressed.toString('utf8');
-
-        html = injectOverlay(html, parseInt(process.env.VA_PORT || '3001'));
-
-        if (onFileServed && req.url === '/') {
-          const filePath = guessFilePath(targetPort);
-          if (filePath) onFileServed(filePath, targetPort);
+      proxyRes.on('data', (chunk) => {
+        if (!headersSent) {
+          // First chunk - send headers without encoding headers
+          headersSent = true;
+          const headers = { ...proxyRes.headers };
+          delete headers['content-encoding'];
+          delete headers['content-length'];
+          delete headers['transfer-encoding'];
+          try { res.writeHead(proxyRes.statusCode, headers); } catch(e) {}
         }
 
-        try {
-          const newHeaders = { ...proxyRes.headers };
-          delete newHeaders['content-encoding'];
-          delete newHeaders['content-length'];
-          delete newHeaders['transfer-encoding'];
-          res.writeHead(proxyRes.statusCode, newHeaders);
-          res.end(html);
-        } catch (e) { /* already sent */ }
+        if (lastChunk) {
+          // Forward previous chunk immediately (streaming!)
+          try { res.write(lastChunk); } catch(e) {}
+        }
+        lastChunk = chunk;  // Hold current chunk, might be last
       });
+
+      proxyRes.on('end', () => {
+        if (lastChunk) {
+          // Decompress and inject overlay on last chunk
+          const encoding = proxyRes.headers['content-encoding'];
+          const decompressed = decompressBuffer(lastChunk, encoding);
+          let html = decompressed.toString('utf8');
+
+          // Inject overlay script
+          html = injectOverlay(html, agentPort);
+
+          // On file served callback
+          if (onFileServed && req.url === '/') {
+            const filePath = guessFilePath(targetPort);
+            if (filePath) onFileServed(filePath, targetPort);
+          }
+
+          try { res.write(html); } catch(e) {}
+        }
+        try { res.end(); } catch(e) {}
+      });
+
     } else {
+      // Non-HTML: pipe directly (no buffering)
       if (headersSent) return;
       headersSent = true;
       try {
