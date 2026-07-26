@@ -1,142 +1,205 @@
-# Visual Agent
+<div align="center">
 
-Local-first visual editing system for AI coding agents.
+# 🎨 Visual Agent
 
-## What is this?
-
-Visual Agent lets you visually edit a running website in the browser. Changes are saved as JSON files. Your AI agent reads those files and updates the source code when you run `/view-apply`.
+### Local-First Visual Editing System for AI Coding Agents
 
 **Browser me edit karo → AI agent code update kare**
 
-## How it works
+[![npm version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/rishavbuilder/Visual-Agent)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
+[![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)]()
 
-1. Developer starts dev server (`npm run dev`)
-2. Developer starts Visual Agent (`visual-agent start`)
-3. Visual Agent proxies the dev server and injects overlay
-4. Developer edits website visually in browser
-5. Changes saved to `.visual-agent/pending/*.json`
-6. Developer tells AI agent: `/view-apply`
-7. AI agent reads files and updates source code
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/rishavbuilder)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rishavbuilder)
+[![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)]()
 
-## Installation
+---
 
-### Option 1: Git Clone + npm link (Recommended)
+**Visual Agent** ek intelligent middleware hai jo developers aur AI coding agents ke beech kaam karta hai. Ye aapko browser me website visually edit karne deta hai, aur AI agent automatically source code update karta hai.
+
+</div>
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎯 **Auto-Injection** | Koi manual HTML editing nahi. Overlay automatically inject hota hai |
+| 🖱️ **Click-to-Edit** | Koi bhi element pe click karo, edit karo |
+| 📦 **Multi-Select** | `Shift + Click` se multiple elements select karo |
+| ✅ **Approval Mode** | Changes apply karne se pehle review karo |
+| 📁 **File-Based Storage** | Changes JSON files me save hoti hain - easy to inspect |
+| 🤖 **Universal AI Support** | Works with Claude, Cursor, Codex, Gemini, OpenCode - koi bhi agent |
+| 🔄 **Live Preview** | Changes instantly browser me dikhte hain |
+| 📜 **Edit History** | Saari edits ka history rakho |
+
+---
+
+## 🚀 How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Visual Agent Flow                        │
+└─────────────────────────────────────────────────────────────────┘
+
+  Developer                    Browser                    AI Agent
+      │                           │                           │
+      │  1. npm run dev           │                           │
+      ├──────────────────────────>│                           │
+      │                           │                           │
+      │  2. visual-agent start    │                           │
+      ├──────────────────────────>│                           │
+      │                           │                           │
+      │  3. Edit karo visually    │                           │
+      │<──────────────────────────┤                           │
+      │                           │                           │
+      │  4. Apply to Code         │                           │
+      │──────────────────────────>│                           │
+      │                           │  5. /view-apply           │
+      │                           ├──────────────────────────>│
+      │                           │                           │
+      │  6. Code updated!         │  7. Read JSON files       │
+      │<──────────────────────────│<──────────────────────────┤
+      │                           │                           │
+      │  8. Hot Reload            │  9. Update source code    │
+      │──────────────────────────>│                           │
+      │                           │                           │
+```
+
+---
+
+## 📦 Installation
+
+### Option 1: Git Clone (Recommended)
 
 ```bash
-# Clone the repo
-git clone https://github.com/username/visual-agent.git
+# Repository clone karo
+git clone https://github.com/rishavbuilder/Visual-Agent.git
 
-# Go to folder
-cd visual-agent
+# Folder me jao
+cd Visual-Agent
 
-# Install dependencies
+# Install karo
 npm install
 
-# Link globally (makes 'visual-agent' command available)
+# Global link karo
 npm link
 ```
 
-### Option 2: Download ZIP
-
-```bash
-# Download ZIP from GitHub and extract
-
-# Go to folder
-cd visual-agent
-
-# Install dependencies
-npm install
-
-# Link globally
-npm link
-```
-
-### Option 3: npx (No install)
+### Option 2: npx (Bina install ke)
 
 ```bash
 npx visual-agent start --target 3000
 ```
 
-## Quick Start
+### Option 3: npm install -g
 
 ```bash
-# 1. Go to your project
-cd my-website
-
-# 2. Initialize Visual Agent
-visual-agent init
-
-# 3. Start your dev server
-npm run dev
-
-# 4. Start Visual Agent (in new terminal)
-visual-agent start --target 3000
-
-# 5. Open browser: http://localhost:3001
+npm install -g visual-agent
 ```
 
-## Commands
+---
+
+## 🎯 Quick Start
+
+### Step 1: Project Initialize
+
+```bash
+cd your-project
+visual-agent init
+```
+
+Ye create karega:
+- `visual-agent.config.json`
+- `.opencode/commands/view-*.md` (OpenCode ke liye)
+- `.claude/skills/view-*/SKILL.md` (Claude Code ke liye)
+- `AGENTS.md` (AI agent instructions)
+
+### Step 2: Dev Server Start
+
+```bash
+npm run dev
+```
+
+### Step 3: Visual Agent Start
+
+```bash
+visual-agent start --target 3000
+```
+
+### Step 4: Browser Me Kholo
+
+```
+http://localhost:3001
+```
+
+### Step 5: Edit Karo!
+
+1. Koi bhi element pe click karo
+2. Color, font, size - kuch bhi change karo
+3. "Apply to Code" button dabao
+4. AI agent me bolo: `/view-apply`
+
+---
+
+## 🛠️ Commands
 
 ### CLI Commands
 
 | Command | Description |
 |---------|-------------|
-| `visual-agent init` | Initialize in current project |
-| `visual-agent start --target <port>` | Start proxy server |
-| `visual-agent apply` | Apply pending changes |
-| `visual-agent status` | Show pending changes |
-| `visual-agent discard` | Discard pending changes |
-| `visual-agent history` | Show applied history |
+| `visual-agent init` | Project me initialize karo |
+| `visual-agent start --target <port>` | Proxy server start karo |
+| `visual-agent apply` | Pending changes apply karo |
+| `visual-agent status` | Pending changes dikhao |
+| `visual-agent discard` | Changes discard karo |
+| `visual-agent history` | Applied history dikhao |
 
 ### AI Agent Commands (Autocomplete)
 
-When you type `/` in your AI agent, these commands appear:
-
 | Command | Description |
 |---------|-------------|
-| `/view-start` | Start Visual Agent |
-| `/view-apply` | Apply pending changes to code |
-| `/view-status` | Show pending changes |
-| `/view-discard` | Discard pending changes |
-| `/view-history` | Show history |
+| `/view-start` | Visual Agent start karo |
+| `/view-apply` | Changes code me apply karo |
+| `/view-status` | Pending changes count dikhao |
+| `/view-discard` | Changes delete karo |
+| `/view-history` | History dikhao |
 
-## How AI Agent Knows About Commands
+---
 
-When you run `visual-agent init`, it creates:
+## 📁 Folder Structure
 
 ```
 your-project/
-├── .opencode/commands/
+├── .visual-agent/
+│   ├── pending/              # Changes waiting to be applied
+│   │   ├── abc123.json
+│   │   └── def456.json
+│   └── applied/              # History of applied changes
+│       └── abc123.json
+├── .opencode/commands/       # OpenCode commands
 │   ├── view-start.md
 │   ├── view-apply.md
 │   ├── view-status.md
 │   ├── view-discard.md
 │   └── view-history.md
-├── .claude/skills/
+├── .claude/skills/           # Claude Code skills
 │   ├── view-apply/SKILL.md
 │   ├── view-status/SKILL.md
 │   ├── view-discard/SKILL.md
 │   └── view-history/SKILL.md
-└── visual-agent.config.json
-```
-
-These files tell your AI agent what each command does.
-
-## Folder Structure
-
-```
-your-project/
-├── .visual-agent/
-│   ├── pending/           # Changes waiting to be applied
-│   │   ├── abc123.json
-│   │   └── def456.json
-│   └── applied/           # History of applied changes
-│       └── abc123.json
+├── AGENTS.md                 # AI agent instructions
+├── visual-agent.config.json  # Configuration
 ├── index.html
 └── styles.css
 ```
 
-## Change File Format
+---
+
+## 📄 Change File Format
 
 ```json
 {
@@ -152,45 +215,186 @@ your-project/
 }
 ```
 
-## Features
+---
 
-### Auto-Injection
-No manual HTML editing. Overlay is automatically injected into HTML.
-
-### Multi-Select
-Hold `Shift` + Click to select multiple elements.
-
-### Approval Mode
-Review changes before applying. Click "Apply to Code" to approve.
-
-### File-Based Storage
-Changes saved as JSON files. Easy to inspect, edit, or delete.
-
-### Works With All AI Agents
-No MCP required. Works with Claude Code, Cursor, Codex, Gemini, OpenCode, and any AI agent that can read files.
-
-## Example Workflow
+## 🎨 Example Workflow
 
 ```bash
-# Terminal 1: Your dev server
+# Terminal 1: Dev server
 npm run dev
 
 # Terminal 2: Visual Agent
 visual-agent start --target 3000
 
 # Browser: http://localhost:3001
-# - Click on h1
-# - Change color to red
-# - Click "Apply to Code"
+# - h1 pe click karo
+# - Color red karo
+# - "Apply to Code" click karo
 
-# AI Agent: /view-apply
-# Agent reads .visual-agent/pending/*.json
-# Agent updates index.html
-# Agent deletes the JSON files
+# AI Agent me:
+/view-apply
 
-# Browser: Refresh - changes persist!
+# Agent:
+# 1. .visual-agent/pending/ folder padhega
+# 2. index.html me CSS update karega
+# 3. JSON file delete karega
+# 4. "✅ 1 change applied!"
+
+# Browser refresh karo - changes persist hain!
 ```
 
-## License
+---
 
-MIT
+## ⚙️ Configuration
+
+### visual-agent.config.json
+
+```json
+{
+  "version": "2.0.0",
+  "server": {
+    "port": 3001
+  },
+  "proxy": {
+    "autoDetect": true,
+    "targetPort": null
+  },
+  "overlay": {
+    "enabled": true,
+    "position": "bottom-right"
+  },
+  "storage": {
+    "pendingDir": ".visual-agent/pending",
+    "appliedDir": ".visual-agent/applied"
+  }
+}
+```
+
+---
+
+## 🔧 Supported AI Agents
+
+| Agent | Status | Autocomplete |
+|-------|--------|--------------|
+| **OpenCode** | ✅ Supported | `/view-apply` etc. |
+| **Claude Code** | ✅ Supported | `/view-apply` etc. |
+| **Cursor** | ✅ Supported | Via AGENTS.md |
+| **Codex CLI** | ✅ Supported | Via AGENTS.md |
+| **Gemini CLI** | ✅ Supported | Via AGENTS.md |
+| **Any Agent** | ✅ Works | File-based (universal) |
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Architecture                            │
+└─────────────────────────────────────────────────────────────────┘
+
+┌──────────────┐     WebSocket      ┌──────────────────┐
+│   Browser    │◄──────────────────►│  Visual Agent    │
+│   Overlay    │                    │  Server          │
+│              │                    │  (Express)       │
+│  - Click     │                    │                  │
+│  - Edit      │                    │  - Proxy         │
+│  - Approve   │                    │  - API           │
+└──────────────┘                    │  - WebSocket     │
+                                    └────────┬─────────┘
+                                             │
+                                             │ File System
+                                             ▼
+                                    ┌──────────────────┐
+                                    │  .visual-agent/  │
+                                    │  ├── pending/    │
+                                    │  └── applied/    │
+                                    └────────┬─────────┘
+                                             │
+                                             │ /view-apply
+                                             ▼
+                                    ┌──────────────────┐
+                                    │  AI Agent        │
+                                    │  (Claude/Cursor) │
+                                    │                  │
+                                    │  - Read JSON     │
+                                    │  - Update Code   │
+                                    │  - Delete Files  │
+                                    └──────────────────┘
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome hain! Steps:
+
+1. Fork karo
+2. Branch banao (`git checkout -b feature/amazing-feature`)
+3. Commit karo (`git commit -m 'Add amazing feature'`)
+4. Push karo (`git push origin feature/amazing-feature`)
+5. PR create karo
+
+---
+
+## 📝 License
+
+MIT License - [LICENSE](LICENSE) file dekho.
+
+```
+MIT License
+
+Copyright (c) 2026 Rishav Builder
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## 👨‍💻 Author
+
+**Rishav Builder**
+
+- GitHub: [@rishavbuilder](https://github.com/rishavbuilder)
+- Twitter: [@rishavbuilder](https://twitter.com/rishavbuilder)
+
+---
+
+## 🙏 Support
+
+Agar ye project useful laga toh:
+
+1. ⭐ **Star** do GitHub pe
+2. 🐦 **Share** karo Twitter pe
+3. 🤝 **Contribute** karo
+
+---
+
+## 📊 Tags
+
+`visual-editor` `ai-agent` `code-generation` `web-development` `frontend` `css` `editing` `mcp` `claude` `cursor` `opencode` `developer-tools` `productivity`
+
+---
+
+<div align="center">
+
+**Made with ❤️ by Rishav Builder**
+
+[⬆ Back to Top](#-visual-agent)
+
+</div>
