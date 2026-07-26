@@ -4,7 +4,7 @@
 
 ### Local-First Visual Editing System for AI Coding Agents
 
-**Browser me edit karo → AI agent code update kare**
+**Edit in browser → AI agent updates source code**
 
 [![npm version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/rishavbuilder/Visual-Agent)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -17,7 +17,7 @@
 
 ---
 
-**Visual Agent** ek intelligent middleware hai jo developers aur AI coding agents ke beech kaam karta hai. Ye aapko browser me website visually edit karne deta hai, aur AI agent automatically source code update karta hai.
+**Visual Agent** is an intelligent middleware that enables developers to visually edit running websites directly in the browser while AI coding agents automatically update the source code.
 
 </div>
 
@@ -27,14 +27,14 @@
 
 | Feature | Description |
 |---------|-------------|
-| 🎯 **Auto-Injection** | Koi manual HTML editing nahi. Overlay automatically inject hota hai |
-| 🖱️ **Click-to-Edit** | Koi bhi element pe click karo, edit karo |
-| 📦 **Multi-Select** | `Shift + Click` se multiple elements select karo |
-| ✅ **Approval Mode** | Changes apply karne se pehle review karo |
-| 📁 **File-Based Storage** | Changes JSON files me save hoti hain - easy to inspect |
-| 🤖 **Universal AI Support** | Works with Claude, Cursor, Codex, Gemini, OpenCode - koi bhi agent |
-| 🔄 **Live Preview** | Changes instantly browser me dikhte hain |
-| 📜 **Edit History** | Saari edits ka history rakho |
+| 🎯 **Auto-Injection** | No manual HTML editing required. Overlay is automatically injected into your pages |
+| 🖱️ **Click-to-Edit** | Click any element to select and edit it |
+| 📦 **Multi-Select** | Hold `Shift + Click` to select and edit multiple elements at once |
+| ✅ **Approval Mode** | Review all changes before applying them to source code |
+| 📁 **File-Based Storage** | Changes are saved as JSON files - easy to inspect, edit, or delete |
+| 🤖 **Universal AI Support** | Works with Claude, Cursor, Codex, Gemini, OpenCode - any AI agent |
+| 🔄 **Live Preview** | See changes instantly in the browser |
+| 📜 **Edit History** | Track all edits with timestamps |
 
 ---
 
@@ -53,10 +53,10 @@
       │  2. visual-agent start    │                           │
       ├──────────────────────────>│                           │
       │                           │                           │
-      │  3. Edit karo visually    │                           │
+      │  3. Edit visually         │                           │
       │<──────────────────────────┤                           │
       │                           │                           │
-      │  4. Apply to Code         │                           │
+      │  4. Click "Apply"         │                           │
       │──────────────────────────>│                           │
       │                           │  5. /view-apply           │
       │                           ├──────────────────────────>│
@@ -76,20 +76,20 @@
 ### Option 1: Git Clone (Recommended)
 
 ```bash
-# Repository clone karo
+# Clone the repository
 git clone https://github.com/rishavbuilder/Visual-Agent.git
 
-# Folder me jao
+# Navigate to folder
 cd Visual-Agent
 
-# Install karo
+# Install dependencies
 npm install
 
-# Global link karo
+# Link globally (makes 'visual-agent' command available)
 npm link
 ```
 
-### Option 2: npx (Bina install ke)
+### Option 2: npx (No Install Required)
 
 ```bash
 npx visual-agent start --target 3000
@@ -105,43 +105,43 @@ npm install -g visual-agent
 
 ## 🎯 Quick Start
 
-### Step 1: Project Initialize
+### Step 1: Initialize Project
 
 ```bash
 cd your-project
 visual-agent init
 ```
 
-Ye create karega:
+This creates:
 - `visual-agent.config.json`
-- `.opencode/commands/view-*.md` (OpenCode ke liye)
-- `.claude/skills/view-*/SKILL.md` (Claude Code ke liye)
+- `.opencode/commands/view-*.md` (for OpenCode)
+- `.claude/skills/view-*/SKILL.md` (for Claude Code)
 - `AGENTS.md` (AI agent instructions)
 
-### Step 2: Dev Server Start
+### Step 2: Start Dev Server
 
 ```bash
 npm run dev
 ```
 
-### Step 3: Visual Agent Start
+### Step 3: Start Visual Agent
 
 ```bash
 visual-agent start --target 3000
 ```
 
-### Step 4: Browser Me Kholo
+### Step 4: Open in Browser
 
 ```
 http://localhost:3001
 ```
 
-### Step 5: Edit Karo!
+### Step 5: Start Editing!
 
-1. Koi bhi element pe click karo
-2. Color, font, size - kuch bhi change karo
-3. "Apply to Code" button dabao
-4. AI agent me bolo: `/view-apply`
+1. Click any element on the page
+2. Change color, font, size - anything
+3. Click "Apply to Code" button
+4. Tell your AI agent: `/view-apply`
 
 ---
 
@@ -151,22 +151,22 @@ http://localhost:3001
 
 | Command | Description |
 |---------|-------------|
-| `visual-agent init` | Project me initialize karo |
-| `visual-agent start --target <port>` | Proxy server start karo |
-| `visual-agent apply` | Pending changes apply karo |
-| `visual-agent status` | Pending changes dikhao |
-| `visual-agent discard` | Changes discard karo |
-| `visual-agent history` | Applied history dikhao |
+| `visual-agent init` | Initialize in current project |
+| `visual-agent start --target <port>` | Start proxy server |
+| `visual-agent apply` | Apply pending changes |
+| `visual-agent status` | Show pending changes |
+| `visual-agent discard` | Discard pending changes |
+| `visual-agent history` | Show applied history |
 
 ### AI Agent Commands (Autocomplete)
 
 | Command | Description |
 |---------|-------------|
-| `/view-start` | Visual Agent start karo |
-| `/view-apply` | Changes code me apply karo |
-| `/view-status` | Pending changes count dikhao |
-| `/view-discard` | Changes delete karo |
-| `/view-history` | History dikhao |
+| `/view-start` | Start Visual Agent |
+| `/view-apply` | Apply changes to source code |
+| `/view-status` | Show pending changes count |
+| `/view-discard` | Delete pending changes |
+| `/view-history` | Show edit history |
 
 ---
 
@@ -220,27 +220,27 @@ your-project/
 ## 🎨 Example Workflow
 
 ```bash
-# Terminal 1: Dev server
+# Terminal 1: Start dev server
 npm run dev
 
-# Terminal 2: Visual Agent
+# Terminal 2: Start Visual Agent
 visual-agent start --target 3000
 
 # Browser: http://localhost:3001
-# - h1 pe click karo
-# - Color red karo
-# - "Apply to Code" click karo
+# - Click on h1
+# - Change color to red
+# - Click "Apply to Code"
 
-# AI Agent me:
+# AI Agent:
 /view-apply
 
-# Agent:
-# 1. .visual-agent/pending/ folder padhega
-# 2. index.html me CSS update karega
-# 3. JSON file delete karega
-# 4. "✅ 1 change applied!"
+# Agent will:
+# 1. Read .visual-agent/pending/ folder
+# 2. Update CSS in index.html
+# 3. Delete the JSON file
+# 4. Report: "✅ 1 change applied!"
 
-# Browser refresh karo - changes persist hain!
+# Refresh browser - changes persist!
 ```
 
 ---
@@ -326,19 +326,19 @@ visual-agent start --target 3000
 
 ## 🤝 Contributing
 
-Contributions welcome hain! Steps:
+Contributions are welcome! Here's how:
 
-1. Fork karo
-2. Branch banao (`git checkout -b feature/amazing-feature`)
-3. Commit karo (`git commit -m 'Add amazing feature'`)
-4. Push karo (`git push origin feature/amazing-feature`)
-5. PR create karo
+1. Fork the repository
+2. Create a branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
 ## 📝 License
 
-MIT License - [LICENSE](LICENSE) file dekho.
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ```
 MIT License
@@ -377,11 +377,11 @@ SOFTWARE.
 
 ## 🙏 Support
 
-Agar ye project useful laga toh:
+If you find this project useful, please:
 
-1. ⭐ **Star** do GitHub pe
-2. 🐦 **Share** karo Twitter pe
-3. 🤝 **Contribute** karo
+1. ⭐ **Star** it on GitHub
+2. 🐦 **Share** it on Twitter
+3. 🤝 **Contribute** to the project
 
 ---
 
