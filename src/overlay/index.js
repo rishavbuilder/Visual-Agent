@@ -13,12 +13,24 @@
     config = options;
     console.log('[Visual Agent] Initializing...');
 
+    // Wait for page to fully load - don't block loading screen
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        // Delay further to let loading animation complete
+        setTimeout(initVisualAgent, 500);
+      });
+    } else {
+      // Page already loaded, but still delay to be safe
+      setTimeout(initVisualAgent, 500);
+    }
+  };
+
+  function initVisualAgent() {
     initWebSocket();
     createOverlay();
     initInspector();
-
     console.log('[Visual Agent] Ready');
-  };
+  }
 
   function initWebSocket() {
     ws = new WebSocket(`ws://localhost:${config.port}`);
@@ -186,9 +198,12 @@
   }
 
   function initInspector() {
-    document.addEventListener('click', handleDocumentClick, true);
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
+    // Delay event listeners to not interfere with loading screen
+    setTimeout(function() {
+      document.addEventListener('click', handleDocumentClick, true);
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
+    }, 1000);
   }
 
   function handleKeyDown(e) {
@@ -206,6 +221,14 @@
   }
 
   function handleDocumentClick(e) {
+    // Don't intercept clicks on loading screens
+    if (document.querySelector('.loading') || 
+        document.querySelector('[data-loading]') ||
+        document.querySelector('#__next.Loading') ||
+        document.querySelector('[class*="loading"]')) {
+      return;
+    }
+    
     if (e.target.closest('#visual-agent-overlay')) return;
     if (e.target.closest('script') || e.target.closest('link')) return;
 
