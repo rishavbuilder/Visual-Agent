@@ -1,6 +1,7 @@
 const http = require('http');
 const chalk = require('chalk');
 const net = require('net');
+const zlib = require('zlib');
 
 const COMMON_PORTS = [3000, 3001, 5173, 5174, 8080, 8000, 4200, 3002, 3003, 4000, 5000, 8888];
 
@@ -34,6 +35,30 @@ function checkPort(port) {
   });
 }
 
+function decompressBody(chunks, encoding) {
+  const buffer = Buffer.concat(chunks);
+
+  if (!encoding) return buffer;
+
+  try {
+    switch (encoding) {
+      case 'gzip':
+        return zlib.gunzipSync(buffer);
+      case 'br':
+        return zlib.brotliDecompressSync(buffer);
+      case 'deflate':
+        return zlib.inflateSync(buffer);
+      case 'identity':
+        return buffer;
+      default:
+        return buffer;
+    }
+  } catch (e) {
+    console.error(chalk.yellow(`  Decompress error (${encoding}): ${e.message}`));
+    return buffer;
+  }
+}
+
 function proxyRequest(req, res, targetPort, onFileServed) {
   let headersSent = false;
 
@@ -55,7 +80,10 @@ function proxyRequest(req, res, targetPort, onFileServed) {
         if (headersSent) return;
         headersSent = true;
 
-        let html = Buffer.concat(body).toString();
+        const encoding = proxyRes.headers['content-encoding'];
+        const decompressed = decompressBody(body, encoding);
+        let html = decompressed.toString('utf8');
+
         html = injectOverlay(html, parseInt(process.env.VA_PORT || '3001'));
 
         if (onFileServed && req.url === '/') {
@@ -65,7 +93,9 @@ function proxyRequest(req, res, targetPort, onFileServed) {
 
         try {
           const newHeaders = { ...proxyRes.headers };
+          delete newHeaders['content-encoding'];
           delete newHeaders['content-length'];
+          delete newHeaders['transfer-encoding'];
           res.writeHead(proxyRes.statusCode, newHeaders);
           res.end(html);
         } catch (e) { /* already sent */ }
