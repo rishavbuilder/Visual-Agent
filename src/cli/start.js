@@ -6,8 +6,7 @@ async function start(options) {
 
   try {
     await startServer({
-      port: parseInt(options.port) || 3001,
-      target: options.target
+      port: parseInt(options.port) || 3001
     });
   } catch (error) {
     console.error(chalk.red('\n✖ Failed to start Visual Agent:'));

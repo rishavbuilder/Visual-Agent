@@ -19,9 +19,8 @@ program
 
 program
   .command('start')
-  .description('Start the visual editing session with proxy')
+  .description('Start the Visual Agent server')
   .option('-p, --port <port>', 'Server port', '3001')
-  .option('-t, --target <port>', 'Target localhost port to proxy')
   .action((options) => {
     require('../src/cli/start')(options);
   });

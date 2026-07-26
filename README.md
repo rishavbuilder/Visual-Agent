@@ -6,14 +6,13 @@
 
 **Edit in browser → AI agent updates source code**
 
-[![npm version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/rishavbuilder/Visual-Agent)
+[![npm version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/rishavbuilder/Visual-Agent)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
 [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)]()
 
 [![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/rishavbuilder)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rishavbuilder)
-[![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)]()
 
 ---
 
@@ -27,7 +26,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| 🎯 **Auto-Injection** | No manual HTML editing required. Overlay is automatically injected into your pages |
+| 🎯 **React Component** | Embedded as a React component - no proxy, no streaming issues |
 | 🖱️ **Click-to-Edit** | Click any element to select and edit it |
 | 📦 **Multi-Select** | Hold `Shift + Click` to select and edit multiple elements at once |
 | ✅ **Approval Mode** | Review all changes before applying them to source code |
@@ -35,6 +34,7 @@
 | 🤖 **Universal AI Support** | Works with Claude, Cursor, Codex, Gemini, OpenCode - any AI agent |
 | 🔄 **Live Preview** | See changes instantly in the browser |
 | 📜 **Edit History** | Track all edits with timestamps |
+| ⚡ **Next.js Compatible** | Works with App Router, React Server Components, Streaming SSR |
 
 ---
 
@@ -53,99 +53,48 @@
       │  2. visual-agent start    │                           │
       ├──────────────────────────>│                           │
       │                           │                           │
-      │  3. Edit visually         │                           │
+      │  3. React mounts overlay  │                           │
       │<──────────────────────────┤                           │
       │                           │                           │
-      │  4. Click "Apply"         │                           │
+      │  4. Edit visually         │                           │
+      │<──────────────────────────┤                           │
+      │                           │                           │
+      │  5. Click "Apply"         │                           │
       │──────────────────────────>│                           │
-      │                           │  5. /view-apply           │
+      │                           │  6. /view-apply           │
       │                           ├──────────────────────────>│
       │                           │                           │
-      │  6. Code updated!         │  7. Read JSON files       │
+      │  7. Code updated!         │  8. Read JSON files       │
       │<──────────────────────────│<──────────────────────────┤
       │                           │                           │
-      │  8. Hot Reload            │  9. Update source code    │
+      │  9. Hot Reload            │  10. Update source code   │
       │──────────────────────────>│                           │
       │                           │                           │
 ```
 
 ---
 
-## ⚡ Streaming Support (v3.1.0)
+## ⚡ Why v4.0.0? (No More Proxy!)
 
-Visual Agent supports **streaming HTML** for modern frameworks like Next.js App Router.
+### The Problem with Proxy Approach
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Streaming Proxy Flow                         │
-└─────────────────────────────────────────────────────────────────┘
-
-  Next.js Server                Visual Agent              Browser
-      │                              │                        │
-      │  Chunk 1: <!DOCTYPE html>   │                        │
-      ├─────────────────────────────>│                        │
-      │                              │  Forward immediately   │
-      │                              ├───────────────────────>│
-      │                              │                        │
-      │  Chunk 2: <head>...</head>  │                        │
-      ├─────────────────────────────>│                        │
-      │                              │  Forward immediately   │
-      │                              ├───────────────────────>│
-      │                              │                        │
-      │  Chunk 3: <body>...</body>  │                        │
-      ├─────────────────────────────>│                        │
-      │                              │  Inject overlay        │
-      │                              │  Forward with script   │
-      │                              ├───────────────────────>│
-      │                              │                        │
-      │                              │    ✅ Works!           │
+❌ Proxy buffers entire HTML response
+❌ Breaks Next.js streaming SSR
+❌ React hydration fails
+❌ Loading screens freeze
+❌ Content Encoding errors
 ```
 
-**Benefits:**
-- ✅ Next.js App Router streaming works
-- ✅ React Server Components work
-- ✅ Suspense boundaries work
-- ✅ Loading screens animate properly
-- ✅ React hydration not blocked
+### The Solution: React Component
 
----
-
-## 🔧 Troubleshooting
-
-### Next.js Loading Screen Not Working?
-
-If your Next.js app's loading screen freezes or React hydration fails:
-
-**Problem:** Proxy was buffering entire HTML, breaking streaming.
-
-**Solution:** Updated in v3.1.0 - streaming proxy now forwards chunks immediately.
-
-```bash
-# Update to latest version
-cd Visual-Agent && git pull && npm install
-
-# Restart Visual Agent
-visual-agent start --target 3000
 ```
-
-### "Content Encoding Error" in Browser?
-
-**Cause:** Proxy couldn't decompress gzip/brotli response.
-
-**Solution:** v3.1.0 handles decompression on last chunk only.
-
-```bash
-# Check if your server uses compression
-curl -I http://localhost:3000 | grep -i encoding
+✅ Embedded as React component
+✅ Runs AFTER hydration
+✅ Preserves streaming SSR
+✅ Works with React Server Components
+✅ No encoding issues
 ```
-
-### React Hydration Mismatch?
-
-**Cause:** Overlay script was blocking React events.
-
-**Solution:** v3.1.0 removed `preventDefault()` and `stopPropagation()` from click handler.
-
----
 
 ---
 
@@ -170,7 +119,7 @@ npm link
 ### Option 2: npx (No Install Required)
 
 ```bash
-npx visual-agent start --target 3000
+npx visual-agent start
 ```
 
 ### Option 3: npm install -g
@@ -181,40 +130,77 @@ npm install -g visual-agent
 
 ---
 
-## 🎯 Quick Start
+## 🎯 Quick Start (Next.js)
 
 ### Step 1: Initialize Project
 
 ```bash
-cd your-project
+cd your-nextjs-project
 visual-agent init
 ```
 
 This creates:
 - `visual-agent.config.json`
+- `src/components/VisualAgentOverlay.tsx`
 - `.opencode/commands/view-*.md` (for OpenCode)
 - `.claude/skills/view-*/SKILL.md` (for Claude Code)
 - `AGENTS.md` (AI agent instructions)
 
-### Step 2: Start Dev Server
+### Step 2: Add Component to Layout
+
+```tsx
+// src/app/layout.tsx
+import VisualAgentOverlay from '../components/VisualAgentOverlay';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <VisualAgentOverlay />
+      </body>
+    </html>
+  );
+}
+```
+
+### Step 3: Add Rewrites to next.config.ts
+
+```typescript
+// next.config.ts
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/__visual-agent/:path*',
+        destination: 'http://localhost:3001/__visual-agent/:path*',
+      },
+    ];
+  },
+};
+
+module.exports = nextConfig;
+```
+
+### Step 4: Start Dev Server
 
 ```bash
 npm run dev
 ```
 
-### Step 3: Start Visual Agent
+### Step 5: Start Visual Agent
 
 ```bash
-visual-agent start --target 3000
+visual-agent start
 ```
 
-### Step 4: Open in Browser
+### Step 6: Open in Browser
 
 ```
-http://localhost:3001
+http://localhost:3000
 ```
 
-### Step 5: Start Editing!
+### Step 7: Start Editing!
 
 1. Click any element on the page
 2. Change color, font, size - anything
@@ -230,7 +216,7 @@ http://localhost:3001
 | Command | Description |
 |---------|-------------|
 | `visual-agent init` | Initialize in current project |
-| `visual-agent start --target <port>` | Start proxy server |
+| `visual-agent start` | Start Visual Agent server |
 | `visual-agent apply` | Apply pending changes |
 | `visual-agent status` | Show pending changes |
 | `visual-agent discard` | Discard pending changes |
@@ -252,6 +238,11 @@ http://localhost:3001
 
 ```
 your-project/
+├── src/
+│   ├── app/
+│   │   └── layout.tsx          # Add <VisualAgentOverlay />
+│   └── components/
+│       └── VisualAgentOverlay.tsx  # Auto-created by init
 ├── .visual-agent/
 │   ├── pending/              # Changes waiting to be applied
 │   │   ├── abc123.json
@@ -271,8 +262,7 @@ your-project/
 │   └── view-history/SKILL.md
 ├── AGENTS.md                 # AI agent instructions
 ├── visual-agent.config.json  # Configuration
-├── index.html
-└── styles.css
+└── next.config.ts            # Add rewrites here
 ```
 
 ---
@@ -302,9 +292,9 @@ your-project/
 npm run dev
 
 # Terminal 2: Start Visual Agent
-visual-agent start --target 3000
+visual-agent start
 
-# Browser: http://localhost:3001
+# Browser: http://localhost:3000
 # - Click on h1
 # - Change color to red
 # - Click "Apply to Code"
@@ -329,13 +319,9 @@ visual-agent start --target 3000
 
 ```json
 {
-  "version": "2.0.0",
+  "version": "4.0.0",
   "server": {
     "port": 3001
-  },
-  "proxy": {
-    "autoDetect": true,
-    "targetPort": null
   },
   "overlay": {
     "enabled": true,
@@ -373,12 +359,12 @@ visual-agent start --target 3000
 ┌──────────────┐     WebSocket      ┌──────────────────┐
 │   Browser    │◄──────────────────►│  Visual Agent    │
 │   Overlay    │                    │  Server          │
-│              │                    │  (Express)       │
-│  - Click     │                    │                  │
-│  - Edit      │                    │  - Proxy         │
-│  - Approve   │                    │  - API           │
-└──────────────┘                    │  - WebSocket     │
-                                    └────────┬─────────┘
+│   (React)    │                    │  (Express)       │
+│              │                    │                  │
+│  - Click     │                    │  - API           │
+│  - Edit      │                    │  - WebSocket     │
+│  - Approve   │                    │  - File Watcher  │
+└──────────────┘                    └────────┬─────────┘
                                              │
                                              │ File System
                                              ▼
@@ -399,6 +385,28 @@ visual-agent start --target 3000
                                     │  - Delete Files  │
                                     └──────────────────┘
 ```
+
+---
+
+## 🔧 Troubleshooting
+
+### Overlay Not Loading?
+
+1. Check Visual Agent is running: `visual-agent start`
+2. Check rewrites in `next.config.ts`
+3. Check browser console for errors
+
+### Changes Not Saving?
+
+1. Check `.visual-agent/pending/` folder exists
+2. Check file permissions
+3. Check Visual Agent server logs
+
+### Next.js Specific Issues?
+
+- Ensure `VisualAgentOverlay` is a client component (`'use client'`)
+- Ensure rewrites are configured correctly
+- Check that port 3001 is available
 
 ---
 
@@ -465,7 +473,7 @@ If you find this project useful, please:
 
 ## 📊 Tags
 
-`visual-editor` `ai-agent` `code-generation` `web-development` `frontend` `css` `editing` `claude` `cursor` `opencode` `developer-tools` `productivity` `nextjs` `streaming`
+`visual-editor` `ai-agent` `code-generation` `web-development` `frontend` `css` `editing` `claude` `cursor` `opencode` `developer-tools` `productivity` `nextjs` `react` `streaming`
 
 ---
 

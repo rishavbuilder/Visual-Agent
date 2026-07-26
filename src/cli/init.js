@@ -14,13 +14,9 @@ function init() {
   }
 
   const config = {
-    version: '2.0.0',
+    version: '4.0.0',
     server: {
       port: 3001
-    },
-    proxy: {
-      autoDetect: true,
-      targetPort: null
     },
     overlay: {
       enabled: true,
@@ -35,15 +31,109 @@ function init() {
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
   console.log(chalk.green('✓ Created visual-agent.config.json'));
 
+  createComponent();
   createOpenCodeCommands();
   createClaudeCodeSkills();
   createAgentsMd();
 
   console.log(chalk.gray('\n  Next steps:'));
-  console.log(chalk.gray('  1. Start your dev server: npm run dev'));
-  console.log(chalk.gray('  2. Start Visual Agent: visual-agent start --target 3000'));
-  console.log(chalk.gray('  3. Open http://localhost:3001 in browser'));
-  console.log(chalk.gray('  4. Use /view-apply in your AI agent to apply changes\n'));
+  console.log(chalk.gray('  1. Add to your layout.tsx:'));
+  console.log(chalk.gray('     import VisualAgentOverlay from "./components/VisualAgentOverlay";'));
+  console.log(chalk.gray('     <VisualAgentOverlay />'));
+  console.log(chalk.gray('  2. Add rewrites to next.config.ts (see README)'));
+  console.log(chalk.gray('  3. Start your dev server: npm run dev'));
+  console.log(chalk.gray('  4. Start Visual Agent: visual-agent start'));
+  console.log(chalk.gray('  5. Use /view-apply in your AI agent to apply changes\n'));
+}
+
+function createComponent() {
+  const componentsDir = path.join(process.cwd(), 'src', 'components');
+  fs.mkdirSync(componentsDir, { recursive: true });
+
+  const tsxContent = `'use client';
+
+import { useEffect } from 'react';
+
+const VISUAL_AGENT_PORT = process.env.NEXT_PUBLIC_VISUAL_AGENT_PORT || 3001;
+
+export default function VisualAgentOverlay() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (process.env.NODE_ENV !== 'development') return;
+
+    const loadOverlay = async () => {
+      try {
+        const script = document.createElement('script');
+        script.src = \`/__visual-agent/index.js\`;
+        script.onload = () => {
+          (window as any).__VISUAL_AGENT_INIT__({ port: VISUAL_AGENT_PORT });
+        };
+        script.onerror = () => {
+          console.warn('[Visual Agent] Server not running. Start with: visual-agent start');
+        };
+        document.head.appendChild(script);
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = \`/__visual-agent/styles.css\`;
+        document.head.appendChild(link);
+      } catch (error) {
+        console.warn('[Visual Agent] Failed to load:', error);
+      }
+    };
+
+    loadOverlay();
+  }, []);
+
+  return null;
+}
+`;
+
+  const jsxContent = `'use client';
+
+import { useEffect } from 'react';
+
+const VISUAL_AGENT_PORT = process.env.NEXT_PUBLIC_VISUAL_AGENT_PORT || 3001;
+
+export default function VisualAgentOverlay() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (process.env.NODE_ENV !== 'development') return;
+
+    const loadOverlay = async () => {
+      try {
+        const script = document.createElement('script');
+        script.src = \`/__visual-agent/index.js\`;
+        script.onload = () => {
+          window.__VISUAL_AGENT_INIT__({ port: VISUAL_AGENT_PORT });
+        };
+        script.onerror = () => {
+          console.warn('[Visual Agent] Server not running. Start with: visual-agent start');
+        };
+        document.head.appendChild(script);
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = \`/__visual-agent/styles.css\`;
+        document.head.appendChild(link);
+      } catch (error) {
+        console.warn('[Visual Agent] Failed to load:', error);
+      }
+    };
+
+    loadOverlay();
+  }, []);
+
+  return null;
+}
+`;
+
+  const hasTypeScript = fs.existsSync(path.join(process.cwd(), 'tsconfig.json'));
+  const filename = hasTypeScript ? 'VisualAgentOverlay.tsx' : 'VisualAgentOverlay.jsx';
+  const content = hasTypeScript ? tsxContent : jsxContent;
+
+  fs.writeFileSync(path.join(componentsDir, filename), content);
+  console.log(chalk.green(`✓ Created src/components/${filename}`));
 }
 
 function createOpenCodeCommands() {
@@ -52,16 +142,16 @@ function createOpenCodeCommands() {
 
   const commands = {
     'view-start.md': `---
-description: Start visual editing session with proxy server
+description: Start Visual Agent server
 ---
 
 Start the Visual Agent server by running this command in the terminal:
 
 \`\`\`bash
-visual-agent start --target 3000
+visual-agent start
 \`\`\`
 
-Replace 3000 with your dev server port. The visual overlay will be available at http://localhost:3001
+The visual overlay will be available in your browser after adding the component to your layout.
 `,
     'view-apply.md': `---
 description: Apply all pending visual changes to source code
