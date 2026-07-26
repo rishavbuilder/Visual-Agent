@@ -232,8 +232,8 @@
     if (e.target.closest('#visual-agent-overlay')) return;
     if (e.target.closest('script') || e.target.closest('link')) return;
 
-    e.preventDefault();
-    e.stopPropagation();
+    // Don't block React events - just select element
+    // e.preventDefault() and e.stopPropagation() removed to not block React hydration
 
     if (isMultiSelectMode) {
       toggleElementSelection(e.target);
